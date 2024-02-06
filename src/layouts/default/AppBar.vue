@@ -9,8 +9,8 @@
       </v-app-bar>
       <v-navigation-drawer v-model="navbar" temporary>
         <v-list nav>
-          <v-list-item prepend-icon="mdi-format-list-checks" title="Listas" value="lists"
-            @click="pushRoute('/lists')" />
+          <v-list-item prepend-icon="mdi-format-list-checks" title="Eventos" value="events"
+            @click="pushRoute('/events')" />
         </v-list>
       </v-navigation-drawer>
     </div>

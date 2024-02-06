@@ -1,7 +1,7 @@
 <template>
-    <v-card title="Listas">
+    <v-card title="Eventos">
         <v-card-text>
-            <v-data-table v-model:sort-by="sortBy" :headers="headers" :items="lists" @click:row.prevent="openDetails">
+            <v-data-table v-model:sort-by="sortBy" :headers="headers" :items="sportsEvents" @click:row.prevent="openDetails">
                 <template #item.event_date="{ item }">
                     {{ formatDate(item.event_date) }}
                 </template>
@@ -34,10 +34,10 @@ const headers = [
 
 const sortBy = [{ key: 'event_date', order: 'desc' }]
 
-const lists = ref([])
+const sportsEvents = ref([])
 
-function getLists() {
-    lists.value = [
+function getSportsEvents() {
+    sportsEvents.value = [
         {
             id: 1,
             event_date: new Date('2024-01-19 20:30:00'),
@@ -78,7 +78,7 @@ const formatDate = (date) => formatRelative(date, new Date())
 const openDetails = (ev, data) => {
     return router.push(
         {
-            name: 'list',
+            name: 'event',
             params: {
                 id: data.item.id
             }
@@ -134,6 +134,6 @@ const getStatus = (item) => {
 
 
 onMounted(() => {
-    getLists()
+    getSportsEvents()
 })
 </script>

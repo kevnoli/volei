@@ -4,7 +4,7 @@
             <v-row class="d-flex align-center justify-center">
         <v-card>
           <v-card-text>
-            <v-btn to="lists">Login com o Google</v-btn>
+            <v-btn to="events">Login com o Google</v-btn>
           </v-card-text>
         </v-card>
       </v-row>

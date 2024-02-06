@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import DefaultLayout from '@/layouts/default/Default.vue'
 
 import Login from '@/components/Login.vue'
-import Lists from '@/components/Lists.vue'
-import List from '@/components/ListDetails.vue'
+import SportsEvents from '@/components/SportsEvents.vue'
+import SportsEvent from '@/components/SportsEventDetails.vue'
 
 const routes = [
     {
@@ -17,14 +17,14 @@ const routes = [
         component: DefaultLayout,
         children: [
             {
-                name: 'lists',
-                path: 'lists',
-                component: Lists
+                name: 'events',
+                path: 'events',
+                component: SportsEvents
             },
             {
-                name: 'list',
-                path: 'list/:id',
-                component: List
+                name: 'event',
+                path: 'event/:id',
+                component: SportsEvent
             }
         ]
     }
