@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container>
         <v-row justify="center">
             <v-col cols="12" sm="8" md="6">
                 <v-card>
@@ -10,22 +10,13 @@
                                     {{ sportsEventName }}
                                 </v-col>
                             </v-row>
-                            <v-row>
-                                <v-spacer />
-                                <v-btn v-if="isAfter(new Date(), sportsEvent.checkin_until)" icon="mdi-strategy" />
-
-                                <v-btn
-                                    v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
-                                    icon="mdi-check-circle" />
-
-                            </v-row>
                         </v-container>
                     </v-card-title>
-                    <v-tabs v-model="tab">
-                        <v-tab value="players">Jogadores</v-tab>
-                        <v-tab value="teams">Times</v-tab>
-                    </v-tabs>
                     <v-card-text>
+                        <v-tabs v-model="tab">
+                            <v-tab value="players">Jogadores</v-tab>
+                            <v-tab value="teams">Times</v-tab>
+                        </v-tabs>
                         <v-window v-model="tab">
                             <v-window-item value="players">
                                 <v-data-table :headers="playersHeaders" :items="sportsEvent.players" :sort-by="sortBy"
@@ -52,6 +43,14 @@
                 </v-card>
             </v-col>
         </v-row>
+        <div class="text-end pointer-events-none" style="position: fixed; bottom: 0; right: 0; margin: 16px;">
+            <v-fab-transition>
+                <v-btn
+                    v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
+                    color="primary" elevation="8" icon="mdi-check" size="large" />
+            </v-fab-transition>
+        </div>
+        <v-layout-item class="text-end pointer-events-none" model-value position="bottom" size="30" />
     </v-container>
 </template>
 <script setup>
