@@ -1,52 +1,58 @@
 <template>
-    <v-card>
-        <v-card-title>
-            <v-container>
-                <v-row>
-                    <v-col>
-                        {{ sportsEventName }}
-                    </v-col>
-                    <v-col>
-                        <v-spacer />
-                    </v-col>
-                    <v-col>
-                        <v-btn v-if="isAfter(new Date(), sportsEvent.checkin_until)" icon="mdi-strategy" />
-                    </v-col>
-                    <v-col>
-                        <v-btn
-                            v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
-                            icon="mdi-check-circle" />
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-card-title>
-        <v-tabs v-model="tab">
-            <v-tab value="players">Jogadores</v-tab>
-            <v-tab value="teams">Times</v-tab>
-        </v-tabs>
-        <v-card-text>
-            <v-window v-model="tab">
-                <v-window-item value="players">
-                    <v-data-table :headers="playersHeaders" :items="sportsEvent.players" :sort-by="sortBy"
-                        @click:row="openRating">
-                        <template #item.rated="{ item }">
-                            <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
-                        </template>
-                    </v-data-table>
-                    <rate :item="selectedItem" :votingOpen="isAfter(sportsEvent.voting_until, new Date())"
-                        :show-dialog="dialog" @update:showDialog="dialog = $event" />
-                </v-window-item>
-                <v-window-item value="teams">
-                    <div v-for="team in teams">
-                        Time {{ team.players[0].name }} (média {{ teamRating(team.players) }})
-                        <v-data-table :headers="teamHeaders" :items="team.players">
+    <v-container fluid>
+        <v-row justify="center">
+            <v-col cols="12" sm="8" md="6">
+                <v-card>
+                    <v-card-title>
+                        <v-container>
+                            <v-row>
+                                <v-col>
+                                    {{ sportsEventName }}
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-spacer />
+                                <v-btn v-if="isAfter(new Date(), sportsEvent.checkin_until)" icon="mdi-strategy" />
 
-                        </v-data-table>
-                    </div>
-                </v-window-item>
-            </v-window>
-        </v-card-text>
-    </v-card>
+                                <v-btn
+                                    v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
+                                    icon="mdi-check-circle" />
+
+                            </v-row>
+                        </v-container>
+                    </v-card-title>
+                    <v-tabs v-model="tab">
+                        <v-tab value="players">Jogadores</v-tab>
+                        <v-tab value="teams">Times</v-tab>
+                    </v-tabs>
+                    <v-card-text>
+                        <v-window v-model="tab">
+                            <v-window-item value="players">
+                                <v-data-table :headers="playersHeaders" :items="sportsEvent.players" :sort-by="sortBy"
+                                    @click:row="openRating">
+                                    <template #item.rated="{ item }">
+                                        <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
+                                    </template>
+                                </v-data-table>
+                                <rate :item="selectedItem" :votingOpen="isAfter(sportsEvent.voting_until, new Date())"
+                                    :show-dialog="dialog" @update:showDialog="dialog = $event" />
+                            </v-window-item>
+                            <v-window-item value="teams">
+                                <v-list>
+                                    <div v-for="team in teams">
+                                        <v-list-subheader
+                                            :title="`Time ${team.players[0].name} (média ${teamRating(team.players)})`" />
+                                        <v-list-item v-for="player in team.players" :title="player.name" />
+                                        <v-divider></v-divider>
+                                    </div>
+                                </v-list>
+                            </v-window-item>
+                        </v-window>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 <script setup>
 import { onMounted } from 'vue';
@@ -62,10 +68,6 @@ const playersHeaders = [
     { value: 'name', title: 'Nome' },
     { value: 'rating', title: 'Nota' },
     { value: 'rated', title: 'Avaliado' }
-]
-
-const teamHeaders = [
-    { value: 'name', title: 'Nome' }
 ]
 
 const sortBy = [
