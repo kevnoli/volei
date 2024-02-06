@@ -13,20 +13,38 @@
                         <v-btn v-if="isAfter(new Date(), sportsEvent.checkin_until)" icon="mdi-strategy" />
                     </v-col>
                     <v-col>
-                        <v-btn v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
+                        <v-btn
+                            v-if="isWithinInterval(new Date(), { start: sportsEvent.checkin_from, end: sportsEvent.checkin_until })"
                             icon="mdi-check-circle" />
                     </v-col>
                 </v-row>
             </v-container>
         </v-card-title>
+        <v-tabs v-model="tab">
+            <v-tab value="players">Jogadores</v-tab>
+            <v-tab value="teams">Times</v-tab>
+        </v-tabs>
         <v-card-text>
-            <v-data-table :headers="headers" :items="sportsEvent.players" :sort-by="sortBy" @click:row="openRating">
-                <template #item.rated="{ item }">
-                    <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
-                </template>
-            </v-data-table>
-            <rate :item="selectedItem" :votingOpen="isAfter(sportsEvent.voting_until, new Date())" :show-dialog="dialog"
-                @update:showDialog="dialog = $event" />
+            <v-window v-model="tab">
+                <v-window-item value="players">
+                    <v-data-table :headers="playersHeaders" :items="sportsEvent.players" :sort-by="sortBy"
+                        @click:row="openRating">
+                        <template #item.rated="{ item }">
+                            <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
+                        </template>
+                    </v-data-table>
+                    <rate :item="selectedItem" :votingOpen="isAfter(sportsEvent.voting_until, new Date())"
+                        :show-dialog="dialog" @update:showDialog="dialog = $event" />
+                </v-window-item>
+                <v-window-item value="teams">
+                    <div v-for="team in teams">
+                        Time {{ team.players[0].name }} (média {{ teamRating(team.players) }})
+                        <v-data-table :headers="teamHeaders" :items="team.players">
+
+                        </v-data-table>
+                    </div>
+                </v-window-item>
+            </v-window>
         </v-card-text>
     </v-card>
 </template>
@@ -40,10 +58,14 @@ import { computed } from 'vue';
 
 const route = useRoute()
 
-const headers = [
+const playersHeaders = [
     { value: 'name', title: 'Nome' },
     { value: 'rating', title: 'Nota' },
     { value: 'rated', title: 'Avaliado' }
+]
+
+const teamHeaders = [
+    { value: 'name', title: 'Nome' }
 ]
 
 const sortBy = [
@@ -51,9 +73,12 @@ const sortBy = [
 ]
 
 const sportsEvent = ref({})
+const teams = ref([])
 
 const dialog = ref(false)
 const selectedItem = ref({})
+
+const tab = ref(null)
 
 const getSportsEventDetails = () => {
     sportsEvent.value = {
@@ -156,6 +181,39 @@ const getSportsEventDetails = () => {
             }
         ]
     }
+    teams.value = [
+        {
+            'id': 0, 'players': [
+                { 'id': 12, 'name': 'Eduardo', 'rating': 2.95 },
+                { 'id': 6, 'name': 'Mateus', 'rating': 4.56 },
+                { 'id': 1, 'name': 'Lucas', 'rating': 4.12 },
+                { 'id': 14, 'name': 'Henrique', 'rating': 3.67 },
+                { 'id': 5, 'name': 'Pedro', 'rating': 3.45 },
+            ]
+        },
+        {
+            'id': 1, 'players': [
+                { 'id': 8, 'name': 'Felipe', 'rating': 2.87 },
+                { 'id': 3, 'name': 'Gabriel', 'rating': 4.73 },
+                { 'id': 13, 'name': 'Murilo', 'rating': 4.01 },
+                { 'id': 11, 'name': 'Leonardo', 'rating': 3.88 },
+                { 'id': 9, 'name': 'Gustavo', 'rating': 3.14 },
+            ]
+        },
+        {
+            'id': 2, 'players': [
+                { 'id': 15, 'name': 'Bruno', 'rating': 2.77 },
+                { 'id': 4, 'name': 'Arthur', 'rating': 2.68 },
+                { 'id': 10, 'name': 'Guilherme', 'rating': 4.22 },
+                { 'id': 7, 'name': 'Rafael', 'rating': 3.92 },
+                { 'id': 2, 'name': 'Miguel', 'rating': 3.59 },
+            ]
+        }
+    ]
+}
+
+const teamRating = (players) => {
+    return (players.reduce((s, x) => s + x['rating'], 0) / players.length).toFixed(2)
 }
 
 const sportsEventName = computed(() => {
