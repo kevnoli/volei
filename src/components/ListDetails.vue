@@ -3,7 +3,7 @@
         <v-card-title>
             <v-container>
                 <v-row>
-                    {{ list.date }}
+                    {{ formatDate(list.event_date) }}
                 </v-row>
             </v-container>
         </v-card-title>
@@ -13,7 +13,7 @@
                     <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
                 </template>
             </v-data-table>
-            <rate :item="selectedItem" :votingOpen="list.votingOpen" :show-dialog="dialog"
+            <rate :item="selectedItem" :votingOpen="isAfter(list.voting_until, new Date())" :show-dialog="dialog"
                 @update:showDialog="dialog = $event" />
         </v-card-text>
     </v-card>
@@ -22,7 +22,7 @@
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { formatRelative } from 'date-fns'
+import { formatRelative, isAfter } from 'date-fns'
 import Rate from './Rate.vue';
 
 const route = useRoute()
@@ -45,8 +45,11 @@ const selectedItem = ref({})
 const getListDetails = () => {
     list.value = {
         id: 3,
-        date: formatDate('2024-02-02 20:30:00'),
-        votingOpen: true,
+        event_date: new Date('2024-02-02 20:30:00'),
+        voting_until: new Date('2024-02-08 23:59:59'),
+        checkin_from: new Date('2024-02-02 08:00:00'),
+        checkin_until: new Date('2024-02-02 19:30:00'),
+        teams_drawn: true,
         players: [
             {
                 "id": 1,

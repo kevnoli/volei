@@ -12,10 +12,10 @@
                         </v-col>
                         <v-col v-if="votingOpen" cols="1">
                             <v-row>
-                                <v-icon icon="mdi-menu-up" @click="playerRating[rating.id] += 0.5" />
+                                <v-icon icon="mdi-menu-up" @click="increaseRating(playerRating[rating.id])" />
                             </v-row>
                             <v-row>
-                                <v-icon icon="mdi-menu-down" @click="playerRating[rating.id] -= 0.5" />
+                                <v-icon icon="mdi-menu-down" @click="decreaseRating(playerRating[rating.id])" />
                             </v-row>
                         </v-col>
                     </v-row>
@@ -73,6 +73,14 @@ const closeDialog = () => {
         teamWork: 3
     }
 };
+
+const increaseRating = (rating) => {
+    if(rating <= 5) rating += 0.5
+}
+
+const decreaseRating = (rating) => {
+    if(rating >= 0) rating -= 0.5
+}
 
 const saveRating = () => {
     closeDialog()
