@@ -12,10 +12,10 @@
                         </v-col>
                         <v-col v-if="votingOpen" cols="1">
                             <v-row>
-                                <v-icon icon="mdi-menu-up" @click="increaseRating(playerRating[rating.id])" />
+                                <v-icon icon="mdi-menu-up" @click="increaseRating(rating.id)" />
                             </v-row>
                             <v-row>
-                                <v-icon icon="mdi-menu-down" @click="decreaseRating(playerRating[rating.id])" />
+                                <v-icon icon="mdi-menu-down" @click="decreaseRating(rating.id)" />
                             </v-row>
                         </v-col>
                     </v-row>
@@ -31,7 +31,7 @@
 </template>
   
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, watch } from 'vue';
 
 const props = defineProps({
     item: Object,
@@ -50,11 +50,11 @@ const ratings = [
 ]
 
 const playerRating = ref({
-    serving: 3,
-    defense: 3,
-    attacking: 3,
-    passing: 3,
-    teamWork: 3
+    serving: 3.5,
+    defense: 3.5,
+    attacking: 3.5,
+    passing: 3.5,
+    teamWork: 3.5
 })
 
 watchEffect(() => {
@@ -66,20 +66,32 @@ const emit = defineEmits(['update:showDialog']);
 const closeDialog = () => {
     emit('update:showDialog', false);
     playerRating.value = {
-        serving: 3,
-        defense: 3,
-        attacking: 3,
-        passing: 3,
-        teamWork: 3
+        serving: 3.5,
+        defense: 3.5,
+        attacking: 3.5,
+        passing: 3.5,
+        teamWork: 3.5
     }
 };
 
+const limitRating = (rating) => {
+    if (rating < 1) return 1
+    if (rating > 5) return 5
+    return rating
+}
+
+watch(playerRating, (newRatings) => {
+    for (const [key, value] of Object.entries(newRatings)) {
+        playerRating.value[key] = limitRating(value)
+    }
+}, { deep: true })
+
 const increaseRating = (rating) => {
-    if(rating <= 5) rating += 0.5
+    playerRating.value[rating] += 0.5
 }
 
 const decreaseRating = (rating) => {
-    if(rating >= 0) rating -= 0.5
+    playerRating.value[rating] -= 0.5
 }
 
 const saveRating = () => {
