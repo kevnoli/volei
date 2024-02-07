@@ -3,3 +3,4 @@ uvicorn[standard]
 alembic
 sqlmodel
 psycopg2-binary
+pre-commit
