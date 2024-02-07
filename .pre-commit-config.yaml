@@ -3,4 +3,4 @@ repos:
     rev: 'v2.0.4'
     hooks:
       - id: autopep8
-        args: ['--in-place', '--aggressive', '--aggressive', '--ignore=E402', '--ignore=W690']
+        args: ['--in-place', '--aggressive', '--aggressive', '--ignore', 'E402']
