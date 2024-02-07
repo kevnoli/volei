@@ -1,5 +1,6 @@
 from sqlmodel import Field, SQLModel, Relationship
-from models import Team, Player
+from .team import Team
+from .player import Player
 
 class TeamPlayer(SQLModel, table=True):
     team_id: int = Field(foreign_key="team.id", primary_key=True)
