@@ -43,7 +43,7 @@ class Event(EventBase, table=True):
 
 class EventRead(EventBase):
     id: int
-    group: "Group"
+    group_id: int
     teams: List["Team"]
     players: List["EventPlayer"]
 

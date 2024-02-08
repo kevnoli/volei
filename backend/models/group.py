@@ -16,7 +16,6 @@ class Group(GroupBase, table=True):
 
 class GroupRead(GroupBase):
     id: int
-    events: List["Event"]
     players: List["GroupPlayer"]
 
 

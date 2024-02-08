@@ -3,9 +3,9 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from db import get_session
 
-from models import GroupRead, GroupCreate, GroupUpdate
+from models import GroupRead, GroupCreate, GroupUpdate, EventRead
 
-from controllers import group
+from controllers import group, event
 
 router = APIRouter(prefix='/groups', tags=['groups'])
 
@@ -38,3 +38,8 @@ def replace_group(group_id: int, group_data: GroupUpdate, session: Session = Dep
 @router.patch('/{group_id}')
 def update_group(group_id: int, group_data: GroupUpdate, session: Session = Depends(get_session)) -> GroupRead:
     return group.update(group_id, group_data, session)
+
+
+@router.get('/{group_id}/events/')
+def fetch_all_events(group_id: int, session: Session = Depends(get_session)) -> List[EventRead]:
+    return event.show_from_group(group_id, session)
