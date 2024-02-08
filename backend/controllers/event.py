@@ -1,23 +1,21 @@
 from typing import List
-from fastapi import Depends
 from sqlmodel import Session, select
 from models import Event, EventRead, EventCreate, EventUpdate
-from db import get_session
 
 
-def show(session: Session = Depends(get_session)) -> List[EventRead]:
+def show(session: Session) -> List[EventRead]:
     events = session.exec(select(Event)).all()
     return events
 
 
-def index(event_id: int, session: Session = Depends(get_session)) -> EventRead:
+def index(event_id: int, session: Session) -> EventRead:
     event = session.get(Event, event_id)
     return event
 
 
 def create(
         event_data: EventCreate,
-        session: Session = Depends(get_session)) -> EventRead:
+        session: Session) -> EventRead:
     event = Event.model_validate(event_data)
     session.add(event)
     session.commit()
@@ -25,7 +23,7 @@ def create(
     return event
 
 
-def remove(event_id: int, session: Session = Depends(get_session)):
+def remove(event_id: int, session: Session):
     event = session.get(Event, event_id)
     if event:
         session.delete(event)
@@ -34,7 +32,7 @@ def remove(event_id: int, session: Session = Depends(get_session)):
 
 
 def replace(event_id: int, event_data: EventUpdate,
-            session: Session = Depends(get_session)) -> EventRead:
+            session: Session) -> EventRead:
     event = session.get(Event, event_id)
     if event:
         event_data = event_data.model_dump(exclude_unset=True)
@@ -47,6 +45,6 @@ def replace(event_id: int, event_data: EventUpdate,
 
 
 def update(event_id: int, event_data: EventUpdate,
-           session: Session = Depends(get_session)) -> EventRead:
+           session: Session) -> EventRead:
 
     pass
