@@ -1,23 +1,25 @@
 from typing import List
-from fastapi import Depends
 from sqlmodel import Session, select
+from fastapi import HTTPException
+
 from models import Group, GroupRead, GroupCreate, GroupUpdate
-from db import get_session
 
 
-def show(session: Session = Depends(get_session)) -> List[GroupRead]:
+def show(session: Session) -> List[GroupRead]:
     groups = session.exec(select(Group)).all()
     return groups
 
 
-def index(group_id: int, session: Session = Depends(get_session)) -> GroupRead:
+def index(group_id: int, session: Session) -> GroupRead:
     group = session.get(Group, group_id)
-    return group
+    if group:
+        return group
+    raise HTTPException(status_code=404, detail="Group not found")
 
 
 def create(
         group_data: GroupCreate,
-        session: Session = Depends(get_session)) -> GroupRead:
+        session: Session) -> GroupRead:
     group = Group.model_validate(group_data)
     session.add(group)
     session.commit()
@@ -25,16 +27,17 @@ def create(
     return group
 
 
-def remove(group_id: int, session: Session = Depends(get_session)):
+def remove(group_id: int, session: Session):
     group = session.get(Group, group_id)
     if group:
         session.delete(group)
         session.commit()
-    return 204
+        return 204
+    raise HTTPException(status_code=404, detail="Group not found")
 
 
 def replace(group_id: int, group_data: GroupUpdate,
-            session: Session = Depends(get_session)) -> GroupRead:
+            session: Session) -> GroupRead:
     group = session.get(Group, group_id)
     if group:
         group_data = group_data.model_dump(exclude_unset=True)
@@ -43,10 +46,11 @@ def replace(group_id: int, group_data: GroupUpdate,
         session.add(group)
         session.commit()
         session.refresh(group)
-    return group
+        return group
+    raise HTTPException(status_code=404, detail="Group not found")
 
 
 def update(group_id: int, group_data: GroupUpdate,
-           session: Session = Depends(get_session)) -> GroupRead:
+           session: Session) -> GroupRead:
 
     pass
