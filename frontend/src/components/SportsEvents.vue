@@ -94,7 +94,7 @@ const getStatus = (item) => {
         // Rating still open
         if (isAfter(item.voting_until, now)) {
             return {
-                icon: 'mdi-message-draw',
+                icon: 'mdi-vote',
                 description: 'Avaliações abertas'
             };
         }
