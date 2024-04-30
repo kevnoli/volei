@@ -12,7 +12,7 @@ from controllers import player
 router = APIRouter(prefix='/players', tags=['players'])
 
 
-@router.get('/')
+@router.get('')
 def fetch_players(session: Session = Depends(get_session)) -> List[PlayerRead]:
     return player.show(session)
 
