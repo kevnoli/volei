@@ -1,6 +1,5 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .group import Group
-from .player import Player
+
 
 class GroupPlayer(SQLModel, table=True):
     group_id: int = Field(foreign_key="group.id", primary_key=True)
@@ -8,5 +7,9 @@ class GroupPlayer(SQLModel, table=True):
     is_admin: bool = Field(default=False)
 
     # Relationships
-    group: Group = Relationship(back_populates="players")
-    player: Player = Relationship(back_populates="group_association")
+    group: "Group" = Relationship(back_populates="players")
+    player: "Player" = Relationship(back_populates="group_association")
+
+
+from .group import Group
+from .player import Player

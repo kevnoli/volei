@@ -8,9 +8,7 @@
     </v-btn>
 </template>
 <script setup>
-const notifications = [
-    {
-        message: 'Votação aberta para o último Vôlei de sexta'
-    }
-]
+import { ref } from 'vue';
+
+const notifications = ref([])
 </script>

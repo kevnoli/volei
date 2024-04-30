@@ -1,7 +1,8 @@
 <template>
     <v-card title="Eventos">
         <v-card-text>
-            <v-data-table v-model:sort-by="sortBy" :headers="headers" :items="sportsEvents" @click:row.prevent="openDetails">
+            <v-data-table v-model:sort-by="sortBy" :headers="headers" :items="sportsEvents"
+                @click:row.prevent="openDetails">
                 <template #item.event_date="{ item }">
                     {{ formatDate(item.event_date) }}
                 </template>
@@ -37,40 +38,6 @@ const sortBy = [{ key: 'event_date', order: 'desc' }]
 const sportsEvents = ref([])
 
 function getSportsEvents() {
-    sportsEvents.value = [
-        {
-            id: 1,
-            event_date: new Date('2024-01-19 20:30:00'),
-            voting_until: new Date('2024-01-25 23:59:59'),
-            checkin_from: new Date('2024-01-19 08:00:00'),
-            checkin_until: new Date('2024-01-19 19:30:00'),
-            teams_drawn: true
-        },
-        {
-            id: 2,
-            event_date: new Date('2024-01-26 20:30:00'),
-            voting_until: new Date('2024-02-01 23:59:59'),
-            checkin_from: new Date('2024-01-26 08:00:00'),
-            checkin_until: new Date('2024-01-26 19:30:00'),
-            teams_drawn: true
-        },
-        {
-            id: 3,
-            event_date: new Date('2024-02-02 20:30:00'),
-            voting_until: new Date('2024-02-08 23:59:59'),
-            checkin_from: new Date('2024-02-02 08:00:00'),
-            checkin_until: new Date('2024-02-02 19:30:00'),
-            teams_drawn: true
-        },
-        {
-            id: 4,
-            event_date: new Date('2024-02-09 20:30:00'),
-            voting_until: new Date('2024-02-15 23:59:59'),
-            checkin_from: new Date('2024-02-09 08:00:00'),
-            checkin_until: new Date('2024-02-09 19:30:00'),
-            teams_drawn: false
-        },
-    ]
 }
 
 const formatDate = (date) => formatRelative(date, new Date())
@@ -94,7 +61,7 @@ const getStatus = (item) => {
         // Rating still open
         if (isAfter(item.voting_until, now)) {
             return {
-                icon: 'mdi-message-draw',
+                icon: 'mdi-vote',
                 description: 'Avaliações abertas'
             };
         }
@@ -131,7 +98,6 @@ const getStatus = (item) => {
         }
     }
 }
-
 
 onMounted(() => {
     getSportsEvents()
