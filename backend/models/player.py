@@ -6,6 +6,7 @@ from typing import List, Optional
 class PlayerBase(SQLModel):
     first_name: str
     last_name: str
+    overall_rating: Decimal = Field(default=0, max_digits=3, decimal_places=2)
 
 
 class Player(PlayerBase, table=True):
