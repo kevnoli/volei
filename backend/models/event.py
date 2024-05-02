@@ -36,7 +36,6 @@ class Event(EventBase, table=True):
     group_id: int = Field(foreign_key="group.id")
 
     # Relationships
-    group: "Group" = Relationship(back_populates="events")
     teams: List["Team"] = Relationship(back_populates="event")
     players: List["EventPlayer"] = Relationship(back_populates="event")
 
@@ -56,6 +55,5 @@ class EventUpdate(EventBase):
     group_id: int
 
 
-from .group import Group
 from .team import Team
 from .event_player import EventPlayer
