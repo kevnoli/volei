@@ -16,7 +16,6 @@ __all__ = [
     "Team",
     "TeamRead",
     "TeamCreate",
-    "GroupPlayer",
     "EventPlayer",
     "TeamPlayer",
 ]

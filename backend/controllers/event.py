@@ -52,12 +52,3 @@ def update(event_id: int, event_data: EventUpdate,
            session: Session) -> EventRead:
 
     pass
-
-
-def show_by_group(group_id: int, session: Session) -> List[EventRead]:
-    statement = select(Event).where(Event.group_id == group_id)
-    events = session.exec(statement).all()
-    if not events:
-        raise HTTPException(
-            status_code=404, detail="No events found for this group")
-    return events
