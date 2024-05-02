@@ -33,29 +33,25 @@ class EventBase(SQLModel):
 
 class Event(EventBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    group_id: int = Field(foreign_key="group.id")
 
     # Relationships
-    group: "Group" = Relationship(back_populates="events")
     teams: List["Team"] = Relationship(back_populates="event")
     players: List["EventPlayer"] = Relationship(back_populates="event")
 
 
 class EventRead(EventBase):
     id: int
-    group_id: int
     teams: List["Team"]
     players: List["EventPlayer"]
 
 
 class EventCreate(EventBase):
-    group_id: int
+    pass
 
 
 class EventUpdate(EventBase):
-    group_id: int
+    pass
 
 
-from .group import Group
 from .team import Team
 from .event_player import EventPlayer

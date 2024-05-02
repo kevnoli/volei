@@ -38,7 +38,7 @@ def remove_player(player_id: int, session: Session = Depends(get_session)):
 @router.put('/{player_id}')
 def replace_player(
         player_id: int,
-        player_data: PlayerUpdate,
+        player_data: PlayerCreate,
         session: Session = Depends(get_session)) -> PlayerRead:
     return player.replace(player_id, player_data, session)
 

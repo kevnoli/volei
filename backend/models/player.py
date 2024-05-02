@@ -1,17 +1,19 @@
+from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from typing import List, Optional
 
 
 class PlayerBase(SQLModel):
-    name: str
+    first_name: str
+    last_name: str
+    overall_rating: Decimal = Field(default=0, max_digits=3, decimal_places=2)
+    admin: bool = Field(default=False)
 
 
 class Player(PlayerBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
     # Relationships
-    group_association: List["GroupPlayer"] = Relationship(
-        back_populates="player")
     event_association: List["EventPlayer"] = Relationship(
         back_populates="player")
 
@@ -25,8 +27,9 @@ class PlayerCreate(PlayerBase):
 
 
 class PlayerUpdate(PlayerBase):
-    pass
+    first_name: Optional[str]
+    last_name: Optional[str]
+    overall_rating: Optional[Decimal]
 
 
-from .group_player import GroupPlayer
 from .event_player import EventPlayer
