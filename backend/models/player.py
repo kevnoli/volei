@@ -26,7 +26,9 @@ class PlayerCreate(PlayerBase):
 
 
 class PlayerUpdate(PlayerBase):
-    pass
+    first_name: Optional[str]
+    last_name: Optional[str]
+    overall_rating: Optional[Decimal]
 
 
 from .event_player import EventPlayer
