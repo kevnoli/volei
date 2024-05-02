@@ -1,9 +1,11 @@
+from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
 from typing import List, Optional
 
 
 class PlayerBase(SQLModel):
-    name: str
+    first_name: str
+    last_name: str
 
 
 class Player(PlayerBase, table=True):
