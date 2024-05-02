@@ -3,7 +3,7 @@ from .event import Event, EventRead, EventCreate, EventUpdate
 from .team import Team, TeamRead, TeamCreate
 from .event_player import EventPlayer
 from .team_player import TeamPlayer
-from .schedule import Schedule
+from .schedule import Schedule, ScheduleRead, ScheduleCreate, ScheduleUpdate
 
 __all__ = [
     "Player",
@@ -19,5 +19,8 @@ __all__ = [
     "TeamCreate",
     "EventPlayer",
     "TeamPlayer",
-    "Schedule"
+    "Schedule",
+    "ScheduleRead",
+    "ScheduleCreate",
+    "ScheduleUpdate"
 ]
