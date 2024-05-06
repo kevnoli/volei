@@ -28,7 +28,8 @@
                 <v-window-item value="teams">
                     <v-list>
                         <div v-for="team in teams">
-                            <v-list-subheader :title="`Time ${team.players[0].name} (média ${teamRating(team.players)})`" />
+                            <v-list-subheader
+                                :title="`Time ${team.players[0].name} (média ${teamRating(team.players)})`" />
                             <v-list-item v-for="player in team.players" :title="player.name" />
                             <v-divider></v-divider>
                         </div>
@@ -47,11 +48,14 @@
     </v-card>
 </template>
 <script setup>
-import { onMounted } from 'vue';
-import { ref } from 'vue';
+import { onMounted, ref, computed, inject } from 'vue';
 import { formatRelative, isAfter, isWithinInterval, parseISO } from 'date-fns'
 import Rate from './Rate.vue';
-import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+const axios = inject("axios")
+
+const route = useRoute()
 
 const playersHeaders = [
     { value: 'name', title: 'Nome' },
@@ -72,6 +76,9 @@ const selectedItem = ref({})
 const tab = ref(null)
 
 const getSportsEventDetails = () => {
+    axios.get(`/events/${route.params.id}`).then((resp) => {
+        sportsEvent.value = resp.data
+    })
 }
 
 const teamRating = (players) => {
