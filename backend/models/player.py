@@ -16,7 +16,7 @@ class Player(PlayerBase, table=True):
 
     # Relationships
     events: list["Event"] = Relationship(
-        back_populates="player", link_model=EventPlayer)
+        back_populates="players", link_model=EventPlayer)
 
 
 class PlayerRead(PlayerBase):
