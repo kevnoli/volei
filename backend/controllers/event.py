@@ -1,10 +1,9 @@
-from typing import List
 from fastapi import HTTPException
 from sqlmodel import Session, select
 from models import Event, EventRead, EventCreate, EventUpdate
 
 
-def show(session: Session) -> List[EventRead]:
+def show(session: Session) -> list[EventRead]:
     events = session.exec(select(Event)).all()
     return events
 

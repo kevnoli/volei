@@ -7,7 +7,7 @@ class EventPlayer(SQLModel, table=True):
 
     # Relationships
     event: "Event" = Relationship(back_populates="players")
-    player: "Player" = Relationship(back_populates="event_association")
+    player: "Player" = Relationship(back_populates="events")
 
 
 from .event import Event

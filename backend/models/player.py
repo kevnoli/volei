@@ -1,6 +1,7 @@
 from decimal import Decimal
 from sqlmodel import Field, SQLModel, Relationship
-from typing import List, Optional
+
+from .event_player import EventPlayer
 
 
 class PlayerBase(SQLModel):
@@ -11,11 +12,11 @@ class PlayerBase(SQLModel):
 
 
 class Player(PlayerBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relationships
-    event_association: List["EventPlayer"] = Relationship(
-        back_populates="player")
+    events: list["Event"] = Relationship(
+        back_populates="player", link_model=EventPlayer)
 
 
 class PlayerRead(PlayerBase):
@@ -27,9 +28,9 @@ class PlayerCreate(PlayerBase):
 
 
 class PlayerUpdate(PlayerBase):
-    first_name: Optional[str]
-    last_name: Optional[str]
-    overall_rating: Optional[Decimal]
+    first_name: str | None
+    last_name: str | None
+    overall_rating: Decimal | None
 
 
-from .event_player import EventPlayer
+from .event import Event

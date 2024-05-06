@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from db import get_session
@@ -11,7 +10,7 @@ router = APIRouter(prefix='/events', tags=['events'])
 
 
 @router.get('')
-def fetch_events(session: Session = Depends(get_session)) -> List[EventRead]:
+def fetch_events(session: Session = Depends(get_session)) -> list[EventRead]:
     return event.show(session)
 
 

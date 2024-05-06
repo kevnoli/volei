@@ -1,11 +1,10 @@
-from typing import List
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from models import Schedule, ScheduleRead, ScheduleCreate, ScheduleUpdate
 
 
-def show(session: Session) -> List[ScheduleRead]:
+def show(session: Session) -> list[ScheduleRead]:
     schedule = session.exec(select(Schedule)).all()
 
     return schedule

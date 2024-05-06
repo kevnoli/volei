@@ -1,10 +1,9 @@
-from typing import List
 from fastapi import HTTPException
 from sqlmodel import Session, select
 from models import Player, PlayerRead, PlayerCreate, PlayerUpdate
 
 
-def show(session: Session) -> List[PlayerRead]:
+def show(session: Session) -> list[PlayerRead]:
     players = session.exec(select(Player)).all()
     return players
 
