@@ -38,11 +38,14 @@ class Event(EventBase, table=True):
     # Relationships
     players: list["Player"] = Relationship(
         back_populates="events", link_model=EventPlayer)
+    teams: list["Team"] = Relationship(
+        back_populates="event")
 
 
 class EventRead(EventBase):
     id: int
     players: list["PlayerRead"]
+    teams: list["TeamRead"]
 
 
 class EventCreate(EventBase):
@@ -54,3 +57,4 @@ class EventUpdate(EventBase):
 
 
 from .player import Player, PlayerRead
+from .team import Team, TeamRead
