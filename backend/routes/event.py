@@ -43,3 +43,16 @@ def replace_event(event_id: int, event_data: EventUpdate,
 def update_event(event_id: int, event_data: EventUpdate,
                  session: Session = Depends(get_session)) -> EventRead:
     return event.update(event_id, event_data, session)
+
+
+@router.get('/{event_id}/teams')
+def fetch_event_teams(event_id: int, session: Session = Depends(get_session)):
+    return event.show_teams(event_id, session)
+
+
+@router.post('/{event_id}/teams')
+def create_event_teams(
+        event_id: int,
+        teams: int,
+        session: Session = Depends(get_session)):
+    return event.create_teams(event_id, teams, session)
