@@ -18,6 +18,9 @@
                 <v-window-item value="players">
                     <v-data-table :headers="playersHeaders" :items="sportsEvent.players" :sort-by="sortBy"
                         @click:row="openRating">
+                        <template #item.name="{ item }">
+                            {{ item.first_name }} {{ item.last_name }}
+                        </template>
                         <template #item.rated="{ item }">
                             <v-icon :icon="item.rated ? 'mdi-check' : 'mdi-close'"></v-icon>
                         </template>
@@ -59,7 +62,7 @@ const route = useRoute()
 
 const playersHeaders = [
     { value: 'name', title: 'Nome' },
-    { value: 'rating', title: 'Nota' },
+    { value: 'overall_rating', title: 'Nota' },
     { value: 'rated', title: 'Avaliado' }
 ]
 
