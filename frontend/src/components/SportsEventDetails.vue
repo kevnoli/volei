@@ -32,8 +32,11 @@
                     <v-list>
                         <div v-for="team in teams">
                             <v-list-subheader
-                                :title="`Time ${team.players[0].name} (média ${teamRating(team.players)})`" />
-                            <v-list-item v-for="player in team.players" :title="player.name" />
+                                :title="`Time ${team.players[0].first_name} ${team.players[0].last_name} (média ${teamRating(team.players)})`" />
+                            <v-list-item v-for="player in team.players">
+                                <v-list-item-title>{{ player.first_name }} {{ player.last_name }}</v-list-item-title>
+                                <v-list-item-subtitle>{{ player.overall_rating }}</v-list-item-subtitle>
+                            </v-list-item>
                             <v-divider></v-divider>
                         </div>
                     </v-list>
@@ -62,8 +65,7 @@ const route = useRoute()
 
 const playersHeaders = [
     { value: 'name', title: 'Nome' },
-    { value: 'overall_rating', title: 'Nota' },
-    { value: 'rated', title: 'Avaliado' }
+    { value: 'rated', title: 'Avaliado', align: 'center' },
 ]
 
 const sortBy = [
@@ -92,7 +94,8 @@ const getSportsEventDetails = () => {
 }
 
 const teamRating = (players) => {
-    return (players.reduce((s, x) => s + x['rating'], 0) / players.length).toFixed(2)
+    if (players.length === 0) return 0
+    return (players.reduce((s, x) => parseFloat(s) + parseFloat(x['overall_rating']), 0) / players.length).toFixed(2)
 }
 
 const sportsEventName = computed(() => {
