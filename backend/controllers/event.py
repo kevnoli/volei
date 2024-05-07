@@ -1,7 +1,8 @@
 from fastapi import HTTPException
 from sqlmodel import Session, select
-from models import Event, EventRead, EventCreate, EventUpdate, Team, TeamPlayer
+from models import Event, EventRead, EventCreate, EventUpdate, Team
 from random import shuffle
+from datetime import datetime, UTC
 
 
 def show(session: Session) -> list[EventRead]:
@@ -62,6 +63,10 @@ def show_teams(event_id: int, session: Session):
 
 def create_teams(event_id: int, teams: int, session: Session):
     event = session.get(Event, event_id)
+
+    if not (datetime.now(UTC) > event.checkin_until and datetime.now(
+            UTC) < event.start_date):
+        raise HTTPException(403, "Team draw closed.")
 
     for team in event.teams:
         session.delete(team)

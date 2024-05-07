@@ -54,7 +54,7 @@
 </template>
 <script setup>
 import { onMounted, ref, computed, inject } from 'vue';
-import { formatRelative, isAfter, parseISO } from 'date-fns'
+import { formatRelative, isAfter, parseISO, isWithinInterval } from 'date-fns'
 import Rate from './Rate.vue';
 import { useRoute } from 'vue-router';
 
@@ -84,10 +84,10 @@ const activeFab = computed(() => {
         case 'players':
             return {}
         case 'teams':
-            if (event.value.checkin_until && !isAfter(event.value.checkin_until, new Date())) {
-                return {}
+            if (event.value.checkin_until && isWithinInterval(new Date(), { start: event.value.checkin_until, end: event.value.start_date })) {
+                return { icon: 'mdi-cog-refresh', action: drawTeams }
             }
-            return { icon: 'mdi-cog-refresh', action: drawTeams }
+            return {}
         default:
             return {}
     }
