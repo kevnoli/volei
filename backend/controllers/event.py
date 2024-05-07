@@ -63,22 +63,26 @@ def show_teams(event_id: int, session: Session):
 def create_teams(event_id: int, teams: int, session: Session):
     event = session.get(Event, event_id)
 
+    for team in event.teams:
+        session.delete(team)
+
     players = [player for player in event.players]
     shuffle(players)
 
-    team_list = [{"team": Team(order=i, event=event_id), "rating": 0}
-                 for i in range(teams)]
+    team_list = [{"team": Team(event=event), "rating": 0}
+                 for _ in range(teams)]
 
-    session.add_all([team["team"] for team in team_list])
+    for team in team_list:
+        session.add(team["team"])
 
     def calculate_ratings():
         for team in team_list:
             team["rating"] = sum(
-                [player.rating for player in players if player.team == team.team])
+                [player.overall_rating for player in team["team"].players])
 
     def get_lowest_rated_team() -> Team:
         lowest_rated_team = None
-        lowest_rating = 5
+        lowest_rating = float('inf')
         for team in team_list:
             if team["rating"] < lowest_rating:
                 lowest_rating = team["rating"]
@@ -88,8 +92,8 @@ def create_teams(event_id: int, teams: int, session: Session):
     for player in players:
         calculate_ratings()
         team = get_lowest_rated_team()
-        player_link = TeamPlayer(player=player, team=team)
-        session.add(player_link)
+        team.players.append(player)
+        session.add(team)
 
     session.commit()
     session.refresh(event)

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlmodel import Session
 from db import get_session
 
-from models import EventRead, EventCreate, EventUpdate
+from models import EventRead, EventCreate, EventUpdate, TeamRead
 
 from controllers import event
 
@@ -46,7 +46,7 @@ def update_event(event_id: int, event_data: EventUpdate,
 
 
 @router.get('/{event_id}/teams')
-def fetch_event_teams(event_id: int, session: Session = Depends(get_session)):
+def fetch_event_teams(event_id: int, session: Session = Depends(get_session)) -> list[TeamRead]:
     return event.show_teams(event_id, session)
 
 
@@ -54,5 +54,5 @@ def fetch_event_teams(event_id: int, session: Session = Depends(get_session)):
 def create_event_teams(
         event_id: int,
         teams: int,
-        session: Session = Depends(get_session)):
+        session: Session = Depends(get_session)) -> list[TeamRead]:
     return event.create_teams(event_id, teams, session)
