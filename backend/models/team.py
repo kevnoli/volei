@@ -1,5 +1,7 @@
 from sqlmodel import Field, SQLModel, Relationship
 
+from .team_player import TeamPlayer
+
 
 class TeamBase(SQLModel):
     pass
@@ -11,13 +13,13 @@ class Team(TeamBase, table=True):
 
     # Relationships
     event: "Event" = Relationship(back_populates="teams")
-    player_links: list["TeamPlayer"] = Relationship(back_populates="team")
+    players: list["Player"] = Relationship(link_model=TeamPlayer)
 
 
 class TeamRead(TeamBase):
     id: int
     event_id: int
-    players: list["TeamPlayer"]
+    players: list["PlayerRead"]
 
 
 class TeamCreate(TeamBase):
@@ -26,4 +28,4 @@ class TeamCreate(TeamBase):
 
 
 from .event import Event
-from .team_player import TeamPlayer
+from .player import Player, PlayerRead
