@@ -79,9 +79,16 @@ const selectedItem = ref({})
 const tab = ref(null)
 
 const getSportsEventDetails = () => {
-    axios.get(`/events/${route.params.id}`).then((resp) => {
-        sportsEvent.value = resp.data
-    })
+    axios.get(`/events/${route.params.id}`)
+        .then(({ data }) => {
+            sportsEvent.value = data
+        })
+        .then(() => {
+            axios.get(`/events/${route.params.id}/teams`)
+                .then(({ data }) => {
+                    teams.value = data
+                })
+        })
 }
 
 const teamRating = (players) => {
