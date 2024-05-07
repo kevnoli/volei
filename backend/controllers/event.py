@@ -75,23 +75,30 @@ def create_teams(event_id: int, teams: int, session: Session):
     for team in team_list:
         session.add(team["team"])
 
-    def calculate_ratings():
+    def get_next_team() -> Team:
+        # Calculate ratings
         for team in team_list:
             team["rating"] = sum(
                 [player.overall_rating for player in team["team"].players])
 
-    def get_lowest_rated_team() -> Team:
+        # Get the max length of the list of players
+        min_players = min([len(team["team"].players) for team in team_list])
+
+        teams_with_less_players = [
+            team for team in team_list if len(
+                team["team"].players) == min_players]
+
+        # Get lowest rated team
         lowest_rated_team = None
         lowest_rating = float('inf')
-        for team in team_list:
+        for team in teams_with_less_players:
             if team["rating"] < lowest_rating:
                 lowest_rating = team["rating"]
                 lowest_rated_team = team["team"]
         return lowest_rated_team
 
     for player in players:
-        calculate_ratings()
-        team = get_lowest_rated_team()
+        team = get_next_team()
         team.players.append(player)
         session.add(team)
 
