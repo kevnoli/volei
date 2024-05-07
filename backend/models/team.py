@@ -18,7 +18,6 @@ class Team(TeamBase, table=True):
 
 class TeamRead(TeamBase):
     id: int
-    event_id: int
     players: list["PlayerRead"]
 
 
