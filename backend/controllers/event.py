@@ -1,10 +1,11 @@
-from typing import List
 from fastapi import HTTPException
 from sqlmodel import Session, select
-from models import Event, EventRead, EventCreate, EventUpdate
+from models import Event, EventRead, EventCreate, EventUpdate, Team
+from random import shuffle
+from datetime import datetime, UTC
 
 
-def show(session: Session) -> List[EventRead]:
+def show(session: Session) -> list[EventRead]:
     events = session.exec(select(Event)).all()
     return events
 
@@ -52,3 +53,60 @@ def update(event_id: int, event_data: EventUpdate,
            session: Session) -> EventRead:
 
     pass
+
+
+def show_teams(event_id: int, session: Session):
+    event = session.get(Event, event_id)
+
+    return event.teams
+
+
+def create_teams(event_id: int, teams: int, session: Session):
+    event = session.get(Event, event_id)
+
+    if not (datetime.now(UTC) > event.checkin_until and datetime.now(
+            UTC) < event.start_date):
+        raise HTTPException(403, "Team draw closed.")
+
+    for team in event.teams:
+        session.delete(team)
+
+    players = [player for player in event.players]
+    shuffle(players)
+
+    team_list = [{"team": Team(event=event), "rating": 0}
+                 for _ in range(teams)]
+
+    for team in team_list:
+        session.add(team["team"])
+
+    def get_next_team() -> Team:
+        # Calculate ratings
+        for team in team_list:
+            team["rating"] = sum(
+                [player.overall_rating for player in team["team"].players])
+
+        # Get the max length of the list of players
+        min_players = min([len(team["team"].players) for team in team_list])
+
+        teams_with_less_players = [
+            team for team in team_list if len(
+                team["team"].players) == min_players]
+
+        # Get lowest rated team
+        lowest_rated_team = None
+        lowest_rating = float('inf')
+        for team in teams_with_less_players:
+            if team["rating"] < lowest_rating:
+                lowest_rating = team["rating"]
+                lowest_rated_team = team["team"]
+        return lowest_rated_team
+
+    for player in players:
+        team = get_next_team()
+        team.players.append(player)
+        session.add(team)
+
+    session.commit()
+    session.refresh(event)
+    return event.teams

@@ -1,7 +1,6 @@
 from sqlmodel import Field, SQLModel, Relationship
-from typing import List, Optional
-from .event import Event
-from .player import PlayerRead
+
+from .team_player import TeamPlayer
 
 
 class TeamBase(SQLModel):
@@ -9,23 +8,23 @@ class TeamBase(SQLModel):
 
 
 class Team(TeamBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     event_id: int = Field(foreign_key="event.id")
 
     # Relationships
     event: "Event" = Relationship(back_populates="teams")
-    players: List["TeamPlayer"] = Relationship(back_populates="team")
+    players: list["Player"] = Relationship(link_model=TeamPlayer)
 
 
 class TeamRead(TeamBase):
     id: int
-    event_id: int
-    players: List["PlayerRead"]
+    players: list["PlayerRead"]
 
 
 class TeamCreate(TeamBase):
     event_id: int
-    players: List[int]
+    players: list[int]
 
 
-from .team_player import TeamPlayer
+from .event import Event
+from .player import Player, PlayerRead

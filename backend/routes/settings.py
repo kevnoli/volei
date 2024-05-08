@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
@@ -20,7 +19,7 @@ router = APIRouter(
 
 @router.get('/schedule')
 def fetch_schedule(session: Session = Depends(
-        get_session)) -> List[ScheduleRead]:
+        get_session)) -> list[ScheduleRead]:
     return schedule.show(session)
 
 

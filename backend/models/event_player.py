@@ -1,14 +1,12 @@
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, SQLModel
 
 
 class EventPlayer(SQLModel, table=True):
-    event_id: int = Field(foreign_key="event.id", primary_key=True)
-    player_id: int = Field(foreign_key="player.id", primary_key=True)
-
-    # Relationships
-    event: "Event" = Relationship(back_populates="players")
-    player: "Player" = Relationship(back_populates="event_association")
-
-
-from .event import Event
-from .player import Player
+    event_id: int | None = Field(
+        default=None,
+        foreign_key="event.id",
+        primary_key=True)
+    player_id: int | None = Field(
+        default=None,
+        foreign_key="player.id",
+        primary_key=True)

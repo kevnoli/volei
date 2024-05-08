@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter
 from fastapi import Depends
 from sqlmodel import Session
@@ -13,7 +12,7 @@ router = APIRouter(prefix='/players', tags=['players'])
 
 
 @router.get('')
-def fetch_players(session: Session = Depends(get_session)) -> List[PlayerRead]:
+def fetch_players(session: Session = Depends(get_session)) -> list[PlayerRead]:
     return player.show(session)
 
 

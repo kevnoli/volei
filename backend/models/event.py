@@ -1,6 +1,7 @@
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Column, DateTime
-from typing import List, Optional
+
+from .event_player import EventPlayer
 
 
 class EventBase(SQLModel):
@@ -32,17 +33,19 @@ class EventBase(SQLModel):
 
 
 class Event(EventBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Relationships
-    teams: List["Team"] = Relationship(back_populates="event")
-    players: List["EventPlayer"] = Relationship(back_populates="event")
+    players: list["Player"] = Relationship(
+        back_populates="events", link_model=EventPlayer)
+    teams: list["Team"] = Relationship(
+        back_populates="event")
 
 
 class EventRead(EventBase):
     id: int
-    teams: List["Team"]
-    players: List["EventPlayer"]
+    players: list["PlayerRead"]
+    teams: list["TeamRead"]
 
 
 class EventCreate(EventBase):
@@ -53,5 +56,5 @@ class EventUpdate(EventBase):
     pass
 
 
-from .team import Team
-from .event_player import EventPlayer
+from .player import Player, PlayerRead
+from .team import Team, TeamRead

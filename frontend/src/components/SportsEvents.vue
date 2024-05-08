@@ -3,8 +3,8 @@
         <v-card-text>
             <v-data-table v-model:sort-by="sortBy" :headers="headers" :items="sportsEvents"
                 @click:row.prevent="openDetails">
-                <template #item.event_date="{ item }">
-                    {{ formatDate(item.event_date) }}
+                <template #item.start_date="{ item }">
+                    {{ formatDate(item.start_date) }}
                 </template>
                 <template #item.status="{ item }">
                     <v-tooltip :text="getStatus(item).description">
@@ -21,15 +21,16 @@
     </v-card>
 </template>
 <script setup>
-import { onMounted } from 'vue';
+import { inject, onMounted } from 'vue';
 import { ref } from 'vue';
-import { formatRelative, isAfter } from 'date-fns'
+import { formatRelative, isAfter, parseISO } from 'date-fns'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const axios = inject("axios")
 
 const headers = [
-    { key: 'event_date', title: 'Data' },
+    { key: 'start_date', title: 'Data' },
     { key: 'status', title: 'Status' },
 ]
 
@@ -38,9 +39,17 @@ const sortBy = [{ key: 'event_date', order: 'desc' }]
 const sportsEvents = ref([])
 
 function getSportsEvents() {
+    axios
+        .get("events")
+        .then((resp) => {
+            sportsEvents.value = resp.data
+        })
 }
 
-const formatDate = (date) => formatRelative(date, new Date())
+const formatDate = (date) => {
+    if (!date) return null
+    return formatRelative(parseISO(date), new Date())
+}
 
 const openDetails = (ev, data) => {
     return router.push(
